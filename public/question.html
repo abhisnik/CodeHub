@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question View - CodeHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%230f172a'/><path d='M30 35 L15 50 L30 65' stroke='%2338bdf8' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><path d='M70 35 L85 50 L70 65' stroke='%23818cf8' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><line x1='56' y1='30' x2='44' y2='70' stroke='%23f8fafc' stroke-width='8' stroke-linecap='round'/></svg>">
+    <!-- Prism Syntax Highlighting Theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        .code-container { position: relative; }
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #334155;
+            color: #f8fafc;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid #475569;
+            cursor: pointer;
+        }
+        .copy-btn:hover { background: #475569; }
+    </style>
+</head>
+<body>
+    <!-- <nav>
+        <a href="index.html"><h2>CodeHub</h2></a>
+        <div>
+            <a href="dsa.html">DSA</a>
+            <a href="cpp.html">C++</a>
+        </div>
+    </nav> -->
+    <nav>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="28" height="28" viewBox="0 0 100 100">
+            <rect width="100" height="100" rx="25" fill="#1e293b"/>
+            <path d="M30 35 L15 50 L30 65" stroke="#38bdf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M70 35 L85 50 L70 65" stroke="#818cf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <line x1="56" y1="30" x2="44" y2="70" stroke="#f8fafc" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <h2 style="margin: 0;">CodeHub</h2>
+    </div>
+    <div>
+        <a href="dsa.html">DSA Track</a>
+        <a href="cpp.html">C++ Track</a>
+    </div>
+</nav>
+    <div class="container" id="content">
+        <p style="color: var(--text-muted)">Loading question...</p>
+    </div>
+
+    <!-- Prism JS Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+
+    <script>
+        const id = new URLSearchParams(window.location.search).get('id');
+
+        async function loadQuestion() {
+            try {
+                const res = await fetch(`/api/questions/${id}`);
+                if (!res.ok) {
+                    document.getElementById('content').innerHTML = '<h2>Question Not Found</h2>';
+                    return;
+                }
+                const q = await res.json();
+                
+                // Escape HTML characters in raw code
+                const sanitizedCode = (q.solution_code || '// No code provided')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+
+                document.getElementById('content').innerHTML = `
+                    <div style="margin-bottom: 1rem;">
+                        <span class="tag ${q.difficulty}">${q.difficulty}</span>
+                        <span class="tag">${q.category}</span>
+                        <span class="tag">${q.section} &gt; ${q.topic}</span>
+                    </div>
+                    <h1 style="margin-bottom: 1.5rem;">${q.title}</h1>
+                    
+                    <h3 style="color: var(--primary);">Problem Statement</h3>
+                    <div style="white-space: pre-wrap; margin: 0.8rem 0 2rem; line-height: 1.6; color: #cbd5e1; background: var(--card); padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border);">${q.problem_statement}</div>
+                    
+                    <h3 style="color: var(--primary);">C++ Solution</h3>
+                    <div class="code-container">
+                        <button class="copy-btn" onclick="copyCode()">Copy</button>
+                        <pre><code id="codeBlock" class="language-cpp">${sanitizedCode}</code></pre>
+                    </div>
+
+                    <h3 style="color: var(--primary); margin-top: 2rem;">Explanation</h3>
+                    <div style="white-space: pre-wrap; margin-top: 0.8rem; line-height: 1.6; color: #cbd5e1; background: var(--card); padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border);">${q.solution_explanation || 'No explanation provided.'}</div>
+                `;
+
+                // Trigger Prism highlighter
+                Prism.highlightAll();
+            } catch (err) {
+                document.getElementById('content').innerHTML = '<p>Error loading content.</p>';
+            }
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeBlock').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.innerText = 'Copied!';
+                setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+            });
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>

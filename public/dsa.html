@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><title>DSA Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%230f172a'/><path d='M30 35 L15 50 L30 65' stroke='%2338bdf8' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><path d='M70 35 L85 50 L70 65' stroke='%23818cf8' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><line x1='56' y1='30' x2='44' y2='70' stroke='%23f8fafc' stroke-width='8' stroke-linecap='round'/></svg>">
+</head>
+<body>
+    <!-- <nav><a href="index.html">CodeHub</a><div><a href="dsa.html" style="color:var(--primary)">DSA</a><a href="cpp.html">C++</a></div></nav> -->
+    <nav>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="28" height="28" viewBox="0 0 100 100">
+            <rect width="100" height="100" rx="25" fill="#1e293b"/>
+            <path d="M30 35 L15 50 L30 65" stroke="#38bdf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M70 35 L85 50 L70 65" stroke="#818cf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <line x1="56" y1="30" x2="44" y2="70" stroke="#f8fafc" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <h2 style="margin: 0;">CodeHub</h2>
+    </div>
+    <div>
+        <a href="dsa.html">DSA Track</a>
+        <a href="cpp.html">C++ Track</a>
+    </div>
+</nav>
+    <div class="container">
+        <h2>Data Structures & Algorithms</h2>
+        <div class="search-box" style="margin-top: 1rem;">
+            <input type="text" id="searchInput" placeholder="Search DSA questions by keyword...">
+        </div>
+        <div class="topic-pills">
+            <span class="pill active" onclick="setTopic('')">All</span>
+            <span class="pill" onclick="setTopic('Arrays')">Arrays</span>
+            <span class="pill" onclick="setTopic('Linked Lists')">Linked Lists</span>
+            <span class="pill" onclick="setTopic('Recursion')">Recursion</span>
+            <span class="pill" onclick="setTopic('Sorting')">Sorting</span>
+        </div>
+        <div class="grid" id="questionGrid"></div>
+    </div>
+    <script src="js/app.js"></script>
+    <script>
+        let currentTopic = '';
+        async function load() {
+            const search = document.getElementById('searchInput').value;
+            const data = await fetchQuestions('DSA', currentTopic, search);
+            renderCards(data, 'questionGrid');
+        }
+        function setTopic(topic) {
+            currentTopic = topic;
+            document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.innerText === (topic || 'All')));
+            load();
+        }
+        document.getElementById('searchInput').addEventListener('input', load);
+        load();
+    </script>
+</body>
+</html>

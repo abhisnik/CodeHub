@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CodeHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%230f172a'/><path d='M30 35 L15 50 L30 65' stroke='%2338bdf8' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><path d='M70 35 L85 50 L70 65' stroke='%23818cf8' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><line x1='56' y1='30' x2='44' y2='70' stroke='%23f8fafc' stroke-width='8' stroke-linecap='round'/></svg>">
+</head>
+<body>
+    <script>
+    // Press Ctrl + Shift + A to open the Admin Panel
+    window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+            window.location.href = 'admin.html';
+        }
+    });
+</script>
+    <!-- <nav> -->
+        <!-- <h2>CodeHub</h2> -->
+        <!-- <div>
+            <a href="dsa.html">DSA</a>
+            <a href="cpp.html">C++</a>
+        </div>
+    </nav> -->
+    <nav>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="28" height="28" viewBox="0 0 100 100">
+            <rect width="100" height="100" rx="25" fill="#1e293b"/>
+            <path d="M30 35 L15 50 L30 65" stroke="#38bdf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M70 35 L85 50 L70 65" stroke="#818cf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <line x1="56" y1="30" x2="44" y2="70" stroke="#f8fafc" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <h2 style="margin: 0;">CodeHub</h2>
+    </div>
+    <div>
+        <a href="dsa.html">DSA Track</a>
+        <a href="cpp.html">C++ Track</a>
+    </div>
+</nav>
+    <div class="container hero">
+        <h1>Master Problem Solving & C++</h1>
+        <p style="color: var(--text-muted)">Structured practice for coursework, lab tasks, and interviews.</p>
+        <div style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 2rem;">
+            <a href="dsa.html" class="card" style="width: 250px;">
+                <h3>DSA Track</h3>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-muted);">Arrays, Trees, Graphs, DP</p>
+            </a>
+            <a href="cpp.html" class="card" style="width: 250px;">
+                <h3>C++ Track</h3>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-muted);">OOP, STL, Pointers, Templates</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

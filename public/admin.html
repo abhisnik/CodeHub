@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal - CodeHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%230f172a'/><path d='M30 35 L15 50 L30 65' stroke='%2338bdf8' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><path d='M70 35 L85 50 L70 65' stroke='%23818cf8' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/><line x1='56' y1='30' x2='44' y2='70' stroke='%23f8fafc' stroke-width='8' stroke-linecap='round'/></svg>">
+</head>
+<body>
+    <script>
+    window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+            window.location.href = 'admin.html';
+        }
+    });
+</script>
+    <!-- <nav>
+        <h2>CodeHub Admin</h2>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="dsa.html">DSA</a>
+            <a href="cpp.html">C++</a>
+        </div>
+    </nav> -->
+    <nav>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="28" height="28" viewBox="0 0 100 100">
+            <rect width="100" height="100" rx="25" fill="#1e293b"/>
+            <path d="M30 35 L15 50 L30 65" stroke="#38bdf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M70 35 L85 50 L70 65" stroke="#818cf8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <line x1="56" y1="30" x2="44" y2="70" stroke="#f8fafc" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <h2 style="margin: 0;">CodeHub</h2>
+    </div>
+    <div>
+        <a href="dsa.html">DSA Track</a>
+        <a href="cpp.html">C++ Track</a>
+    </div>
+</nav>
+    <div class="container">
+        <h2>Admin Management Panel</h2>
+
+        <form id="qForm" style="margin: 1.5rem 0;">
+            <h3>Add New Question</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <select id="section"><option value="DSA">DSA</option><option value="CPP">C++</option></select>
+                <input type="text" id="topic" placeholder="Topic (e.g. Arrays, OOP)" required>
+            </div>
+            <input type="text" id="title" placeholder="Problem Title" required>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <select id="difficulty"><option>Easy</option><option>Medium</option><option>Hard</option></select>
+                <select id="category"><option>Classwork</option><option>Homework</option></select>
+            </div>
+            <textarea id="problem_statement" rows="4" placeholder="Problem Statement" required></textarea>
+            <textarea id="solution_code" rows="6" placeholder="C++ Solution Code"></textarea>
+            <textarea id="solution_explanation" rows="3" placeholder="Explanation"></textarea>
+            <button type="submit">Submit Question</button>
+        </form>
+
+        <h3 style="margin-top: 2rem;">Manage Existing Questions</h3>
+        <div id="adminList" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+    </div>
+
+    <script>
+        async function loadAdminList() {
+            const res = await fetch('/api/questions');
+            const data = await res.json();
+            document.getElementById('adminList').innerHTML = data.map(q => `
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border)">
+                    <span><strong>[${q.section}]</strong> ${q.title} (${q.topic})</span>
+                    <button class="danger" style="padding: 0.3rem 0.8rem;" onclick="deleteQ(${q.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('qForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const payload = {
+                section: document.getElementById('section').value,
+                topic: document.getElementById('topic').value,
+                title: document.getElementById('title').value,
+                difficulty: document.getElementById('difficulty').value,
+                category: document.getElementById('category').value,
+                problem_statement: document.getElementById('problem_statement').value,
+                solution_code: document.getElementById('solution_code').value,
+                solution_explanation: document.getElementById('solution_explanation').value
+            };
+
+            const res = await fetch('/api/questions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                e.target.reset();
+                loadAdminList();
+            } else {
+                const err = await res.json();
+                alert(err.error || 'Failed to add question');
+            }
+        });
+
+        async function deleteQ(id) {
+            if (confirm('Delete this question?')) {
+                const res = await fetch(`/api/questions/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    loadAdminList();
+                } else {
+                    const err = await res.json();
+                    alert(err.error || 'Failed to delete question');
+                }
+            }
+        }
+
+        loadAdminList();
+    </script>
+</body>
+</html>
