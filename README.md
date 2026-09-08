@@ -24,10 +24,4 @@ A targeted C++ & Data Structures coursework portal built specifically for classr
 
 ---
 
-### Quickstart
 
-```bash
-git clone [https://github.com/YOUR_GITHUB_USERNAME/codehub.git](https://github.com/YOUR_GITHUB_USERNAME/codehub.git)
-cd codehub
-npm install
-node server.js
